@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/dateSliderButLayout"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:divider="@drawable/list_divider_holo_dark"
+    android:orientation="horizontal"
+    android:showDividers="middle" >
+
+    <Button
+        android:id="@+id/dateSliderCancelButton"
+        style="@android:style/Widget.Holo.Button.Borderless"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="@android:string/cancel" />
+
+    <Button
+        android:id="@+id/dateSliderOkButton"
+        style="@android:style/Widget.Holo.Button.Borderless"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="@string/action_set" />
+
+</LinearLayout>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- default time text -->
+    <color name="time_text_color">#FF888888</color>
+    <color name="time_text_selected_color">#FFCCCCCC</color>
+    <color name="time_text_selected_summary_color">#FFDDDDDD</color>
+    <color name="time_text_disabled_color">#44999999</color>
+    <color name="week_text_color">#FFFFCCCC</color>
+    <color name="week_background_color">#55000000</color>
+    <color name="sunday_color">#FF995555</color>
+    <color name="sunday_summary_color">@color/sunday_color</color>
+    <color name="sunday_selected_color">#FFEE6666</color>
+    <color name="sunday_selected_summary_color">@color/sunday_selected_color</color>
+    <color name="sunday_disabled_color">#44666666</color>
+    
+    <!-- shadow -->
+    <color name="shadow_gradient_start_color">#DD333333</color>
+    <color name="shadow_gradient_center_color">#66111111</color>
+    <color name="shadow_gradient_end_color">#00000000</color>
+    
+    <!-- background -->
+    <color name="background_gradient_start_color">#444</color>
+    <color name="background_gradient_end_color">#111</color>
+    <color name="background_oval_gradient_start_color">#40222222</color>
+    <color name="background_oval_gradient_end_color">#30222222</color>
+
+</resources>
