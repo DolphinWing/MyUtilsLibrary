@@ -30,6 +30,10 @@ public class PreferenceUtils {
         return mSharedPreferences.edit();
     }
 
+    public void commit() {
+
+    }
+
     public Set<String> getStringSet(String key) {
         return getStringSet(key, null);
     }
@@ -96,5 +100,19 @@ public class PreferenceUtils {
 
     public static SharedPreferences getDefaultSharedPreferences(Context context) {
         return PreferenceManager.getDefaultSharedPreferences(context);
+    }
+
+    public int getInt(String key) {
+        return getInt(key, 0);
+    }
+
+    public int getInt(String key, int defaultValue) {
+        return mSharedPreferences.getInt(key, defaultValue);
+    }
+
+    public void putInt(String key, int value) {
+        SharedPreferences.Editor editor = mSharedPreferences.edit();
+        editor.putInt(key, value);
+        editor.commit();
     }
 }
