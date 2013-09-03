@@ -115,4 +115,18 @@ public class PreferenceUtils {
         editor.putInt(key, value);
         editor.commit();
     }
+
+    public boolean getBoolean(String key) {
+        return getBoolean(key, false);
+    }
+
+    public boolean getBoolean(String key, boolean defaultValue) {
+        return mSharedPreferences.getBoolean(key, defaultValue);
+    }
+
+    public void putBoolean(String key, boolean value) {
+        SharedPreferences.Editor editor = mSharedPreferences.edit();
+        editor.putBoolean(key, value);
+        editor.commit();
+    }
 }
