@@ -27,6 +27,25 @@ public class PackageUtils {
             return null;
         }
     }
+	
+	//http://goo.gl/xtf7I
+	public static void enablePackage(Context context, Class<?> cls) {
+		ComponentName activity = new ComponentName(context, cls);
+		final PackageManager pm = context.getPackageManager();
+
+		pm.setComponentEnabledSetting(activity,
+			PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
+			PackageManager.DONT_KILL_APP);
+	}
+	
+	public static void disablePackage(Context context, Class<?> cls) {
+		ComponentName activity = new ComponentName(context, cls);
+		final PackageManager pm = context.getPackageManager();
+
+		pm.setComponentEnabledSetting(activity,
+			PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
+			PackageManager.DONT_KILL_APP);
+	}
 
     /**
      * check if any activity can handle this intent
