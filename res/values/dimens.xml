@@ -27,4 +27,8 @@
     <dimen name="step_pager_tab_height">3dp</dimen>
     <dimen name="step_pager_tab_spacing">8dp</dimen>
 
+    
+    <dimen name="list_item_padding_left">6dp</dimen>
+    <dimen name="list_item_padding_right">6dp</dimen>
+    <dimen name="list_item_height_small">48dp</dimen>
 </resources>
