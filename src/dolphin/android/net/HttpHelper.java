@@ -9,13 +9,17 @@ import android.util.Log;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
 import org.apache.http.StatusLine;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
+import org.apache.http.protocol.HTTP;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
@@ -24,9 +28,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.List;
 import java.util.regex.Pattern;
 
 /**
@@ -37,7 +43,7 @@ public class HttpHelper {
 
     private final static int DEFAULT_NETWORK_TIMEOUT = 20000;
 
-    public final static String ENCODE_UTF8 = "utf-8";
+    public final static String ENCODE_UTF8 = HTTP.UTF_8;//"utf-8";
     public final static String ENCODE_BIG5 = "big5";
 
     /**
@@ -102,47 +108,42 @@ public class HttpHelper {
             // Create client and set our specific user-agent string
             HttpClient client = new DefaultHttpClient(httpParameters);
             HttpGet request = new HttpGet(url);// Uri.encode(url)
-            request.setHeader("User-Agent", sUserAgent);
+            request.setHeader(HTTP.USER_AGENT, sUserAgent);
             //request.setHeader("Content-Type", "text/xml; charset=" + encode);
             //request.setHeader("HTTP_REFERRER", url);
             request.setHeader("REFERER", url);//put referer(referrer) to header
             //request.setHeader("REFERRER", url);
             // return sUserAgent;
 
-            HttpResponse response = client.execute(request);
-
-            // Check if server response is valid
-            StatusLine status = response.getStatusLine();
-            if (status.getStatusCode() != HTTP_STATUS_OK) {
-                throw new Exception("Invalid response from server: " + status.toString());
-            }
-
-            // Pull content stream from response
-            HttpEntity entity = response.getEntity();
-            InputStream inputStream = entity.getContent();
-
-            //if (ENCODE_UTF8 == encode) {
-            ByteArrayOutputStream content = new ByteArrayOutputStream();
-
-            // Read response into a buffered stream
-            int readBytes = 0;
-            while ((readBytes = inputStream.read(sBuffer)) != -1) {
-                content.write(sBuffer, 0, readBytes);
-            }
-
             // Return result from buffered stream
-            return new String(content.toByteArray(), encode);
+            return readFromResponse(client.execute(request), encode);
             //}
-
-            //StringBuilder sb = new StringBuilder("");
-            //// Read response into a buffered stream
-            //String utf8 = new String(content.toByteArray(), encode);
-            //sb.append(utf8);
-            //return sb.toString();
         } catch (IOException e) {
             // throw new Exception("Problem communicating with API", e);
             return "IOException: " + e.getMessage();
         }
+    }
+
+    private static String readFromResponse(HttpResponse response, String encode) throws Exception {
+        // Check if server response is valid
+        StatusLine status = response.getStatusLine();
+        if (status.getStatusCode() != HTTP_STATUS_OK) {
+            throw new Exception("Invalid response from server: " + status.toString());
+        }
+
+        // Pull content stream from response
+        HttpEntity entity = response.getEntity();
+        InputStream inputStream = entity.getContent();
+
+        //if (ENCODE_UTF8 == encode) {
+        ByteArrayOutputStream content = new ByteArrayOutputStream();
+
+        // Read response into a buffered stream
+        int readBytes = 0;
+        while ((readBytes = inputStream.read(sBuffer)) != -1) {
+            content.write(sBuffer, 0, readBytes);
+        }
+        return new String(content.toByteArray(), encode);
     }
 
     /**
@@ -168,13 +169,34 @@ public class HttpHelper {
         return getUrlContent(url, DEFAULT_NETWORK_TIMEOUT);
     }
 
+    public static synchronized String postUrlContent(String url, List<NameValuePair> params, int timeout,
+                                                     String encode) throws Exception {
+
+        HttpParams httpParameters = new BasicHttpParams();
+        HttpConnectionParams.setConnectionTimeout(httpParameters, timeout);
+        HttpConnectionParams.setSoTimeout(httpParameters, timeout);
+
+        HttpClient client = new DefaultHttpClient(httpParameters);
+        HttpPost request = new HttpPost(url);
+        //request.setHeader("User-Agent", sUserAgent);
+        //request.setHeader("REFERER", url);//put referer(referrer) to header
+        try {
+            request.setEntity(new UrlEncodedFormEntity(params, encode));
+            // Return result from buffered stream
+            return readFromResponse(client.execute(request), encode);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     /**
      * remove some ISO-8859 encoded HTML
      *
      * @param content
      * @return
      */
-    public static String removeISO8859HTML(String content) {
+    public static String removeIso8859HTML(String content) {
         String res_content = content;
         // HTML ISO-8859-1 Reference
         // http://www.w3schools.com/tags/ref_entities.asp
