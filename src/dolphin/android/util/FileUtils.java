@@ -5,6 +5,7 @@
 package dolphin.android.util;
 
 import android.os.Environment;
+import android.util.Log;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -18,7 +19,14 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class FileUtils {
+    public final static String TAG = "FileUtils";
+
     public static boolean copyFile(File source, File dest) {
+        if (source == null || !source.exists()) {
+            Log.e(TAG, "no source: " + source);
+            return false;//no file source to copy
+        }
+
         BufferedInputStream bis = null;
         BufferedOutputStream bos = null;
 
@@ -33,12 +41,14 @@ public class FileUtils {
                 bos.write(buf);
             } while (bis.read(buf) != -1);
         } catch (IOException e) {
+            Log.e(TAG, "copyFile: " + e.getMessage());
             return false;
         } finally {
             try {
                 if (bis != null) bis.close();
                 if (bos != null) bos.close();
             } catch (IOException e) {
+                Log.e(TAG, "copyFile: " + e.getMessage());
                 return false;
             }
         }
@@ -58,11 +68,17 @@ public class FileUtils {
 
     /**
      * write string content to a file
+     *
      * @param dst
      * @param content
      * @return
      */
     public static boolean writeStringToFile(File dst, String content) {
+        if (content == null) {
+            Log.e(TAG, "no content");
+            return false;//no content to write
+        }
+
         try {//http://stackoverflow.com/a/1053474
             BufferedWriter writer = new BufferedWriter(new FileWriter(dst));
             writer.write(content, 0, content.length());
@@ -70,9 +86,11 @@ public class FileUtils {
             writer = null;
         } catch (FileNotFoundException e) {
             e.printStackTrace();
+            Log.e(TAG, "writeStringToFile: " + e.getMessage());
             return false;
         } catch (IOException e) {
             e.printStackTrace();
+            Log.e(TAG, "writeStringToFile: " + e.getMessage());
             return false;
         }
         return true;
@@ -80,10 +98,16 @@ public class FileUtils {
 
     /**
      * read the file content to string
+     *
      * @param src
      * @return
      */
     public static String readFileToString(File src) {
+        if (src == null || !src.exists()) {
+            Log.e(TAG, "no source: " + src);
+            return null;//no file source to read
+        }
+
         StringBuilder sb = new StringBuilder();
         try {
             FileReader sr = new FileReader(src);
@@ -102,6 +126,7 @@ public class FileUtils {
             sr.close();
         } catch (IOException e) {
             e.printStackTrace();
+            Log.e(TAG, "readFileToString: " + e.getMessage());
         }
         return sb.toString().trim();
     }
