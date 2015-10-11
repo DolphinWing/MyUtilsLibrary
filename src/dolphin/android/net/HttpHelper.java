@@ -37,7 +37,9 @@ import java.util.regex.Pattern;
 
 /**
  * Created by dolphin on 2013/6/3.
+ * Android 6.0 (SDK=23) remove org.apache.http support
  */
+@Deprecated
 public class HttpHelper {
     private static final String TAG = "HttpHelper";
 
